@@ -43,6 +43,43 @@ async function run() {
       const result = await carCollection.insertOne(newCar);
       res.send(result);
   });
+
+
+  // DELETE
+
+  app.delete("/carDelete/:id", async (req, res) => {
+    const id = req.params.id;
+    const filter = { _id: ObjectId(id) };
+
+    const result = await carCollection.deleteOne(filter);
+
+    res.send(result);
+  });
+
+  // UPDATE
+  app.put("/cars/:id", async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    console.log("from update api", data);
+    const filter = { _id: ObjectId(id) };
+    const options = { upsert: true };
+
+    const updateCar = {
+      $set: {
+        quantity: data.quantity,
+        sold: data.sold,
+      },
+    };
+
+    const result = await carCollection.updateOne(
+      filter,
+      updateCar,
+      options
+    );
+    // console.log('from put method',id)
+    res.send(result);
+  });
+  
   }
 
   finally{
