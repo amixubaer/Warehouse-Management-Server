@@ -60,7 +60,6 @@ async function run() {
   app.put("/cars/:id", async (req, res) => {
     const id = req.params.id;
     const data = req.body;
-    console.log("from update api", data);
     const filter = { _id: ObjectId(id) };
     const options = { upsert: true };
 
@@ -76,10 +75,19 @@ async function run() {
       updateCar,
       options
     );
-    // console.log('from put method',id)
     res.send(result);
   });
-  
+
+
+  // LOGIN
+  app.post('/login', async (req, res) => {
+    const user = req.body;
+    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '1d'
+    });
+    res.send({ accessToken });
+})
+
   }
 
   finally{
